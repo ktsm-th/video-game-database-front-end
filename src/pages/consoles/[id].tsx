@@ -7,6 +7,7 @@ import Head from 'next/head';
 import Spinner from '@/components/spinner';
 import NameTile from '@/components/name-tile';
 import GenreTile from '@/components/genre-tile';
+import ConsoleGames from '@/components/console-games';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
@@ -61,6 +62,9 @@ const ConsoleDetail = () => {
             </div> */}
           </div>
       </div>
+
+      <ConsoleGames></ConsoleGames>
+
     </main>
   )
 }

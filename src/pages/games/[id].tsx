@@ -47,7 +47,7 @@ const GameDetail = () => {
               <h2 className="mt-4 font-bold text-3xl">{game.name}</h2>
               <Link href={`publishers/${game.publisher.id}`}><h3 className="text-2xl">{game.publisher.name}</h3></Link>
 
-              <p className="mt-2">{game.description}<span className="font-semibold">Released: {game.release_date}.</span></p>
+              <p className="mt-2">{game.description}<span className="font-semibold"> Released: {game.release_date}.</span></p>
 
                 <div className="flex mt-4">
                   {game.genres.map((genre: object, index: number) => (
