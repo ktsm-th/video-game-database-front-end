@@ -31,7 +31,7 @@ const GameDetail = () => {
   return (
     <main>
       <Head>
-      <title>{game.name} | Pixel Hunt</title>
+      <title>{game.name} | GAMEPAL</title>
       </Head>
       <div className="flex justify-center mt-8 mb-8">
         <div className="w-2/3 ml-4">
@@ -45,9 +45,9 @@ const GameDetail = () => {
             />
               <div className="w-96 ml-4">
               <h2 className="mt-4 font-bold text-3xl">{game.name}</h2>
-              <Link href={`publishers/${game.publisher.id}`}><h3 className="text-2xl">{game.publisher.name}</h3></Link>
+              <Link href={`/publishers/${game.publisher.id}`}><h3 className="text-2xl text-zinc-800">{game.publisher.name}</h3></Link>
 
-              <p className="mt-2">{game.description}<span className="font-semibold"> Released: {game.release_date}.</span></p>
+              <p className="mt-2">{game.description}<span className="font-semibold text-zinc-800"> Released: {game.release_date}.</span></p>
 
                 <div className="flex mt-4">
                   {game.genres.map((genre: object, index: number) => (

@@ -1,9 +1,6 @@
 import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import useSWR from 'swr';
 import Tile from '@/components/tile';
-
-const inter = Inter({ subsets: ['latin'] })
 
 const fetchData = async (url:string) => {
   try {
@@ -31,13 +28,13 @@ export default function Home() {
        <h1 className="text-white font-bold drop-shadow-[10px_10px_0px_rgba(74,222,128,1)] bg-black pl-4 pr-4 mt-11 mb-11 w-68 h-16 flex justify-center items-center text-5xl ">CONSOLES</h1>
       </div>
       <div className="flex items-center justify-center">
-          <div className={`flex flex-wrap w-1/2 justify-center min-h-screen ${inter.className}`}>
+          <div className={`flex flex-wrap w-1/2 justify-center min-h-screen`}>
             {data.map((console: object, index: number) => (
               <div key={index}>
                 <Tile
                   key={index}
                   name={console.name}
-                  link={``}
+                  link={`/consoles/${console.id}`}
                   image={console.image}
                 />
               </div>

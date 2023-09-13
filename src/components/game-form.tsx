@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image'
 import useSWR from 'swr';
 import Select from 'react-select'
+import { useState } from "react";
 
 const fetchData = async (url:string) => {
   try {
@@ -18,30 +19,42 @@ export default function GameForm() {
   const { data : publishers, error : publisherError } = useSWR('http://192.168.1.120/api/publishers', fetchData);
   const { data: genres, error: genreError } = useSWR('http://192.168.1.120/api/genres', fetchData);
 
+  const [selectedConsoles, setConsoles] = useState<Number[]>([])
+  const [selectedGenres, setGenres] = useState<Number[]>([])
+
+  function handleConsoleChange(option) {
+    setConsoles(option.map(o => o.value))
+  }
+
+  function handleGenreChange(option) {
+    setGenres(option.map(o => o.value))
+  }
+
   let formSuccess = false
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const data = {
-      name: event.target.name.value,
-      description: event.target.description.value,
-      // image: event.target.image.value,
-      release_date: event.target.release_date.value,
-      publisher_id: event.target.publisher_id.value,
-      console_id: event.target.console_id.value,
-      genre_id: event.target.genre_id.value,
-    }
-
-    const JSONdata = JSON.stringify(data)
+    const data = new FormData();
+    data.append('name', event.target.name.value)
+    data.append('description', event.target.description.value)
+    data.append('release_date', event.target.release_date.value)
+    data.append('publisher_id', event.target.publisher_id.value)
+    selectedConsoles.forEach(console => {
+      data.append('console_ids[]', console)
+    })
+    selectedGenres.forEach(genre => {
+      data.append('genre_ids[]', genre)
+    })
+    data.append('image', event.target.image.files[0])
 
     const endpoint = 'http://192.168.1.120/api/games'
 
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
-      body: JSONdata,
+      body: data,
     }
     const response = await fetch(endpoint, options)
     const result = await response.json()
@@ -79,7 +92,7 @@ export default function GameForm() {
         <h3 className={`font-bold text-xl mt-2 sm-desktop:mt-0`}></h3>
         <div className="flex justify-center mb-8">
           <div className="w-auto ml-8">
-            <form action="/send-data-here" method="post">
+            <form onSubmit={handleSubmit} method="post">
               <div className="flex">
                 <div className="w-1/2 mr-1">
                   <label className="font-bold text-l" htmlFor="name">Name:</label>
@@ -95,21 +108,30 @@ export default function GameForm() {
                 <textarea id="description" name="description" className="block p-2.5 w-full h-24 text-sm text-gray-900 bg-white border-2 focus:ring-0 focus:ring-0 resize-none" />
               </div>
               <div className="mt-4">
-                <label className="font-bold text-l " htmlFor="console_id">Available on:</label>
-                <Select name="console_id" id="console_id" isMulti={true} options={consoleOptions} />
+                <label className="font-bold text-l " htmlFor="console_ids">Available on:</label>
+                <Select name="console_ids" id="console_ids" onChange={handleConsoleChange} isMulti={true} options={consoleOptions} />
               </div>
               <div className="mt-4">
                 <label className="font-bold text-l" htmlFor="publisher_id">Released by:</label>
-                <Select name="publisher_id" id="publisher_id"  options={publisherOptions} />
+                <Select name="publisher_id" id="publisher_id" options={publisherOptions} />
               </div>
               <div className="mt-4">
-                <label className="font-bold text-l" htmlFor="genre_id">Game genre:</label>
-                <Select name="genre_id" id="genre_id" isMulti={true} options={genreOptions} />
+                <label className="font-bold text-l" htmlFor="genre_ids">Game genre:</label>
+                <Select name="genre_ids" id="genre_ids" onChange={handleGenreChange} isMulti={true} options={genreOptions} />
+              </div>
+              <div className=" mt-4">
+                <label className="font-bold text-l" htmlFor="image">image:</label>
+                <input className="w-full border-2" type="file" id="image" name="image" />
               </div>
 
-              <button className={`text-center text-white font-bold bg-black drop-shadow-[5px_5px_0px_rgba(74,222,128,1)] w-24 h-8 flex justify-center items-center text-base mt-4 hover:drop-shadow-[5px_5px_0px_rgba(236,72,153,1)]`}>
-                <Link href={""}>SUBMIT</Link>
+              <button type="submit" className={`text-center text-white font-bold bg-black drop-shadow-[5px_5px_0px_rgba(74,222,128,1)] w-24 h-8 flex justify-center items-center text-base mt-4 hover:drop-shadow-[5px_5px_0px_rgba(236,72,153,1)]`}>
+                SUBMIT
               </button>
+              {
+                formSuccess ?
+                  <p>Game Submitted!</p> :
+                  <p></p>
+              }
             </form>
           </div>
         </div>
