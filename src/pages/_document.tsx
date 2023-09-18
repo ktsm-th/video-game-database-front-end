@@ -29,12 +29,12 @@ export default function Document() {
               </div>
             </Link>
             <div className='flex justify-center'>
-              <HeaderLink link="/games" icon={faGamepad} />
-              <HeaderLink link="/consoles" icon={faSplotch} />
-              <HeaderLink link="/companies" icon={faCat} />
-              <HeaderLink link="/publishers" icon={faCloud} />
-              <HeaderLink link="/genres" icon={faGhost} />
-              <HeaderLink link="/new" icon={faPlus} />
+              <HeaderLink link="/games" icon={faGamepad} text="test"/>
+              <HeaderLink link="/consoles" icon={faSplotch} text="test"/>
+              <HeaderLink link="/companies" icon={faCat} text="test"/>
+              <HeaderLink link="/publishers" icon={faCloud} text="test"/>
+              <HeaderLink link="/genres" icon={faGhost} text="test"/>
+              <HeaderLink link="/new" icon={faPlus} text="test"/>
             </div>
             <div>
             <div className='flex ml-20'>

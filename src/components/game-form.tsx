@@ -21,6 +21,8 @@ export default function GameForm() {
 
   const [selectedConsoles, setConsoles] = useState<Number[]>([])
   const [selectedGenres, setGenres] = useState<Number[]>([])
+  const [formErrors, setFormErrors] = useState<Object>({})
+
 
   function handleConsoleChange(option) {
     setConsoles(option.map(o => o.value))
@@ -30,9 +32,9 @@ export default function GameForm() {
     setGenres(option.map(o => o.value))
   }
 
-  let formSuccess = false
   const handleSubmit = async (event) => {
     event.preventDefault()
+    setFormErrors({})
 
     const data = new FormData();
     data.append('name', event.target.name.value)
@@ -58,7 +60,9 @@ export default function GameForm() {
     }
     const response = await fetch(endpoint, options)
     const result = await response.json()
-    formSuccess = true
+    setFormErrors(result.errors)
+
+
   }
 
   if (consoleError || publisherError || genreError) {
@@ -89,7 +93,6 @@ export default function GameForm() {
   return (
     <div className={`flex mx-4 sm-desktop:justify-end flex-col-reverse basis-1/2`}>
       <div className={`sm-desktop:self-end mb-8 flex flex-col items-center`}>
-        <h3 className={`font-bold text-xl mt-2 sm-desktop:mt-0`}></h3>
         <div className="flex justify-center mb-8">
           <div className="w-auto ml-8">
             <form onSubmit={handleSubmit} method="post">
@@ -120,17 +123,18 @@ export default function GameForm() {
                 <Select name="genre_ids" id="genre_ids" onChange={handleGenreChange} isMulti={true} options={genreOptions} />
               </div>
               <div className=" mt-4">
-                <label className="font-bold text-l" htmlFor="image">image:</label>
+                <label className="font-bold text-l" htmlFor="image">Image:</label>
                 <input className="w-full border-2" type="file" id="image" name="image" />
               </div>
-
-              <button type="submit" className={`text-center text-white font-bold bg-black drop-shadow-[5px_5px_0px_rgba(74,222,128,1)] w-24 h-8 flex justify-center items-center text-base mt-4 hover:drop-shadow-[5px_5px_0px_rgba(236,72,153,1)]`}>
+              <button type="submit" className={`text-center text-white font-bold bg-black drop-shadow-[5px_5px_0px_rgba(74,222,128,1)] w-24 h-8 flex justify-center items-center text-base my-4 hover:drop-shadow-[5px_5px_0px_rgba(236,72,153,1)]`}>
                 SUBMIT
               </button>
               {
-                formSuccess ?
-                  <p>Game Submitted!</p> :
-                  <p></p>
+                formErrors ?
+                    Object.values(formErrors).map((error) => {
+                      return <p> {error} </p>
+                    }) :
+                  <p>Game Submitted!</p>
               }
             </form>
           </div>
